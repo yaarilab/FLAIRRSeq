@@ -1,6 +1,13 @@
 $HOSTNAME = ""
 params.outdir = 'results'  
 
+//* params.nproc =  20  //* @input @description:"number of processes cores to use"
+//* params.run_FastQC =  "yes"  //* @input @description:"If to run fastqc"
+//* params.constant_region =  ""  //* @dropdown @options:"M,G"
+params.mate = "single"
+params.alignment_mate = "single"
+params.projectDir = "${projectDir}"
+
 // filter_seq_quality
 params.filter_seq_quality.method = "quality"
 params.filter_seq_quality.nproc = params.nproc
@@ -198,6 +205,7 @@ params.Clone_AIRRseq_Second_CreateGermlines.clone_field = ""
 
 
 
+
 if (!params.mate){params.mate = ""} 
 if (!params.reads){params.reads = ""} 
 if (!params.d_germline){params.d_germline = ""} 
@@ -227,6 +235,7 @@ Channel.fromPath(params.j_germline, type: 'any').map{ file -> tuple(file.baseNam
 Channel.fromPath(params.v_germline, type: 'any').map{ file -> tuple(file.baseName, file) }.into{g_67_germlineFastaFile_g48_22;g_67_germlineFastaFile_g48_12;g_67_germlineFastaFile_g57_0;g_67_germlineFastaFile_g57_1}
 Channel.value(params.alignment_mate).into{g_68_mate_g48_19;g_68_mate_g48_12}
 g_70_outputFileTxt_g48_9 = file(params.custom_internal_data, type: 'any')
+g_71_outputFileTxt_g48_9 = file(params.c_germline, type: 'any')
 
 
 process filter_seq_quality {
@@ -1433,6 +1442,7 @@ input:
  file db_v from g48_22_germlineDb0_g48_9
  file db_d from g48_16_germlineDb0_g48_9
  file db_j from g48_17_germlineDb0_g48_9
+ file auxiliary_data from g_71_outputFileTxt_g48_9
  file custom_internal_data from g_70_outputFileTxt_g48_9
  file db_c from g48_54_germlineDb0_g48_9
 
